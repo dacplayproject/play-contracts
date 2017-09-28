@@ -67,7 +67,18 @@ contract PLS is DSToken("PLS"), Controlled {
                throw;
         }
 
-        return super.transferFrom(_from, _to, _amount);
+        bool success = super.transferFrom(_from, _to, _amount);
+
+        if (success && isContract(_to))
+        {
+            // Refer Contract Interface ApproveAndCallFallBack, using keccak256 since sha3 has been deprecated.
+            if(!_to.call(bytes4(bytes32(keccak256("receiveToken(address,uint256,address)"))), _from, _amount, this)) {
+                // do nothing when error in call in case that the _to contract is not inherited from ReceiveAndCallFallBack
+                // revert();
+                // TODO: Log Some Event here to record the fail.
+                // Even the fallback failed if there is such one, the transfer will not be revert since "revert()" is not called.
+            }
+        }
     }
 
     /// @notice `msg.sender` approves `_spender` to spend `_amount` tokens on

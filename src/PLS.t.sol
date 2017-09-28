@@ -18,4 +18,12 @@ contract PLSTest is DSTest {
     function test_basic_sanity() {
         assertTrue(true);
     }
+
+    function test_transfer_to_contract_with_fallback() {
+        assertTrue(true);
+    }
+
+    function test_transfer_to_contract_without_fallback() {
+        assertTrue(true);
+    }
 }
