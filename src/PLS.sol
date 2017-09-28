@@ -79,6 +79,8 @@ contract PLS is DSToken("PLS"), Controlled {
                 // Even the fallback failed if there is such one, the transfer will not be revert since "revert()" is not called.
             }
         }
+
+        return success;
     }
 
     /// @notice `msg.sender` approves `_spender` to spend `_amount` tokens on
