@@ -9,7 +9,7 @@ contract MigrateController is DSAuth, TokenController {
         pls = PLS(_pls);
     }
 
-    /// @notice The owner of this contract can change the controller of the ATT token
+    /// @notice The owner of this contract can change the controller of the PLS token
     ///  Please, be sure that the owner is a trusted agent or 0x0 address.
     /// @param _newController The address of the new controller
     function changeController(address _newController) public auth {
