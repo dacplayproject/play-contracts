@@ -67,7 +67,7 @@ contract PLS is DSToken("PLS"), Controlled {
                throw;
         }
 
-        bool success = super.transferFrom(_from, _to, _amount);
+        success = super.transferFrom(_from, _to, _amount);
 
         if (success && isContract(_to))
         {
@@ -79,8 +79,6 @@ contract PLS is DSToken("PLS"), Controlled {
                 // Even the fallback failed if there is such one, the transfer will not be revert since "revert()" is not called.
             }
         }
-
-        return success;
     }
 
     /// @notice `msg.sender` approves `_spender` to spend `_amount` tokens on
@@ -97,6 +95,17 @@ contract PLS is DSToken("PLS"), Controlled {
         }
         
         return super.approve(_spender, _amount);
+    }
+
+    function mint(address _guy, uint _wad) auth stoppable {
+        super.mint(_guy, _wad);
+
+        Transfer(0, _guy, _wad);
+    }
+    function burn(address _guy, uint _wad) auth stoppable {
+        super.burn(_guy, _wad);
+
+        Transfer(_guy, 0, _wad);
     }
 
     /// @notice `msg.sender` approves `_spender` to send `_amount` tokens on
