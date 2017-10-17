@@ -14,9 +14,14 @@ contract TokenEchoDemo {
     }
 }
 
+contract Nothing {
+    // do not have receiveToken API
+}
+
 contract ReceiveAndCallFallBackTest is DSTest, TokenController {
     TokenEchoDemo echo;
     PLS pls;
+    Nothing nothing;
 
     function proxyPayment(address _owner) payable returns(bool){
         return true;
@@ -35,17 +40,20 @@ contract ReceiveAndCallFallBackTest is DSTest, TokenController {
     function setUp() {
         echo = new TokenEchoDemo();
         pls = new PLS();
+        nothing = new Nothing();
     }
 
     function testFail_basic_sanity() {
         assertTrue(false);
     }
 
-    function test_basic_sanity() {
+    function test_transfer_token_to_contract() {
         pls.mint(this, 10000);
         pls.transfer(address(echo), 5000);
 
         assertTrue(pls.balanceOf(this) == 10000);
+
+        pls.transfer(address(nothing), 100);
     }
 }
 
