@@ -1,6 +1,7 @@
 pragma solidity ^0.4.13;
 
 import "ds-token/token.sol";
+import './ERC223ReceivingContract.sol';
 
 /// @dev The token controller contract must implement these functions
 contract TokenController {
@@ -79,6 +80,44 @@ contract PLS is DSToken("PLS"), Controlled {
                 // Even the fallback failed if there is such one, the transfer will not be revert since "revert()" is not called.
             }
         }
+    }
+
+    /*
+     * ERC 223
+     * Added support for the ERC 223 "tokenFallback" method in a "transfer" function with a payload.
+     * https://github.com/ethereum/EIPs/issues/223
+     * function transfer(address _to, uint256 _value, bytes _data) public returns (bool success);
+     */
+
+    /// @notice Send `_value` tokens to `_to` from `msg.sender` and trigger
+    /// tokenFallback if sender is a contract.
+    /// @dev Function that is called when a user or another contract wants to transfer funds.
+    /// @param _to Address of token receiver.
+    /// @param _value Number of tokens to transfer.
+    /// @param _data Data to be sent to tokenFallback
+    /// @return Returns success of function call.
+    function transfer(
+        address _to,
+        uint256 _value,
+        bytes _data)
+        public
+        returns (bool)
+    {
+        require(transfer(_to, _value));
+
+        uint codeLength;
+
+        assembly {
+            // Retrieve the size of the code on target address, this needs assembly.
+            codeLength := extcodesize(_to)
+        }
+
+        if (codeLength > 0) {
+            ERC223ReceivingContract receiver = ERC223ReceivingContract(_to);
+            receiver.tokenFallback(msg.sender, _value, _data);
+        }
+
+        return true;
     }
 
     /// @notice `msg.sender` approves `_spender` to spend `_amount` tokens on
