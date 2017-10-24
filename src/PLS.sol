@@ -51,7 +51,7 @@ contract ApproveAndCallFallBack {
 contract PLS is DSToken("PLS"), Controlled {
 
     function PLS() {
-        setName("DAC PLAY Token");
+        setName("DACPLAY Token");
     }
 
     /// @notice Send `_amount` tokens to `_to` from `_from` on the condition it
