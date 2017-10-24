@@ -105,14 +105,7 @@ contract PLS is DSToken("PLS"), Controlled {
     {
         require(transfer(_to, _value));
 
-        uint codeLength;
-
-        assembly {
-            // Retrieve the size of the code on target address, this needs assembly.
-            codeLength := extcodesize(_to)
-        }
-
-        if (codeLength > 0) {
+        if (isContract(_to)) {
             ERC223ReceivingContract receiver = ERC223ReceivingContract(_to);
             receiver.tokenFallback(msg.sender, _value, _data);
         }
