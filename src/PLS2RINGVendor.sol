@@ -2,6 +2,8 @@ pragma solidity ^0.4.23;
 
 import "ds-stop/stop.sol";
 import "erc20/erc20.sol";
+import "../lib/ds-token/lib/erc20/src/erc20.sol";
+import "../lib/ds-token/lib/ds-stop/src/stop.sol";
 
 contract PLS2RINGVendor is DSStop {
     ERC20 public PLS;
@@ -27,6 +29,14 @@ contract PLS2RINGVendor is DSStop {
             require(RING.transfer(_from, _value));
 
             TokenSwap(_from, _value);
+        }
+    }
+
+    // @dev compatible backwards for PLS token contract
+    function receiveToken(address _from, uint256 _amount, address _pls) public {
+        if (msg.sender == _pls) {
+            require(RING.transfer(_from, _amount));
+            TokenSwap(_from, _amount);
         }
     }
 
