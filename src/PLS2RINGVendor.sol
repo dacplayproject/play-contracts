@@ -34,7 +34,7 @@ contract PLS2RINGVendor is DSStop {
 
     // @dev compatible backwards for PLS token contract
     function receiveToken(address _from, uint256 _amount, address _pls) public {
-        if (msg.sender == _pls) {
+        if (msg.sender == PLS) {
             require(RING.transfer(_from, _amount));
             TokenSwap(_from, _amount);
         }
