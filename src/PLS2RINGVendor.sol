@@ -2,8 +2,6 @@ pragma solidity ^0.4.23;
 
 import "ds-stop/stop.sol";
 import "erc20/erc20.sol";
-import "../lib/ds-token/lib/erc20/src/erc20.sol";
-import "../lib/ds-token/lib/ds-stop/src/stop.sol";
 
 contract PLS2RINGVendor is DSStop {
     ERC20 public PLS;
