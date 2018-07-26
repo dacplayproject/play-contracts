@@ -30,6 +30,14 @@ contract PLS2RINGVendor is DSStop {
         }
     }
 
+    // @dev compatible backwards for PLS token contract
+    function receiveToken(address _from, uint256 _amount, address _pls) public {
+        if (msg.sender == PLS) {
+            require(RING.transfer(_from, _amount));
+            TokenSwap(_from, _amount);
+        }
+    }
+
     // TODO: Following logic check can be used by PLS's token controller onTransfer method to check the validation of the trx.
     function onTokenTransfer(address _from, address _to, uint _amount) public returns (bool)
     {
